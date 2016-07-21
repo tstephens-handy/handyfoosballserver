@@ -20,7 +20,7 @@ var db = firebase.database().ref(),
 
 var commands = {
     register: function(userName, email) {
-        return Promise.resolve("Registered " + email + " to " + userName);
+        return "Registered " + email + " to " + userName;
     }
 };
 
@@ -38,7 +38,7 @@ app.post('/', function(req, res) {
         }
         var command = _.split(req.body.text, " ");
         // res.send(JSON.stringify(command));
-        _.spread(commands[_.head(command)])(req.body.user_name, _.tail(command)).then(res.send);
+        res.send(_.spread(commands[_.head(command)])(req.body.user_name, _.tail(command)));
     }
 });
 
