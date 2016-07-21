@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "handyfoosball",
+  "private_key_id": "da6c8b0531e0162e6ca7f2071c02ee2648461e8f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCHZpszRmkA+5NY\nyNMFFHaqCvWTHm/mJTtmnFFClTMysNGyMBModtiLbBCCpbRbxLNcNzf8CsQ086Tn\ngNn1cHvsVMb8UTZefwNqjdkdxU+C3uDVVxr/xuCCx6sSmJPdC6JqaR3VT/B67PRq\n5HJG9CCfnFzLtWR/XbxmkSKsZXXMwbW7HhTd6SQDdz6S0A8ZP9xsnFuTdCobPxn6\neJpuUoHOSR1A+UCz2Utw+kCpwchdqSlmfCUwrf08Oxfawz30AJtlM6NY7aiGDcjW\nzg4JrzractR2aPKSU/NLzglsgjLnDiIteArPS/kGIuzJI5KhkQI34QVvbv1JNTk/\nrprbUPOrAgMBAAECggEAaxaK30Xr3HwcsJa81wK1S425Zm8nP1XpIiG13zxTrt7M\nKur86/77C2IfuMTH3eC3ntKJc80sG1kr7nEpcYZSbLssWfj9UEWSdR7VPkeEuFQA\nbJsk3nDztlunAOEt6SC/hvu2PbSo1QA926DshROmDbbEadUAM//19wUI8GKahaLm\nCxdffOW+TpGGTdwH30TUQKHDXw6lqMHGGEGzrdGLkZTihzpgIdanJRqHRqsCBqUt\nZlmnXi5oJ4BHWRrDnceE0QbrQd7k0nAI//goOP6E5vcIeNEc6FmnBxp/akuAwXHX\nWWbBX9QH+LiGB1uh2Wxh7FD74N7JDDRM6JB+xtaeOQKBgQD/Ok9gScPB2E4FSivN\n3sOTe5Q4g7wwXtWJRCLgxs2A4J6SMmF0PRIkWZKpD/kcDK48TeeGbgS4LIsSFa6U\nKDs++rNvnb17PHBcNZz1/BIP58DVCP2GEdUmNb6hykV5eo/YgAlNgNMreJtaFT+p\nfBj8ZasrW1CHh1w/+NJ3hy3gjwKBgQCHz3uQvEicpia8NAefZI1JgJY+uawg4AUc\n6esLYaClG6K1oU36wrIHaMpD7yMgV/U4sZk1twVwRwa4rlYbB0E9z8jvuRpsIkgt\nFI9GDHv0M9NNxkh2YyzNkQMwMfc1YGjjbiyUHOcXJjHVlh12kVG9Q8HLtP3jWjE8\nqM6UNNoRJQKBgQCR3nGfRolrMITm4Q1IDBkbIXYFFsVnn8vLN/X3IagyEC6Qv9qS\n5JSJ0efQWCC3t0edj6jTW+22lT6mh13Pr26s//utvymcVV6iVMHwlLB+BqZfG1RK\nW8bGn9DkBwbN9w5fXk3yzb3jCns/cQWBiDt/hVve28Gas/I1XbBsQAYoYQKBgB01\n803eMX///LTePAV8iycUETzMksk/ZdoiNfvss7DPkN+gIjWdSs1tLJQQC24ZfRUE\nnf9/rhvIKxnt5XdKyC2TU5S8K4K2nO+VTHu0k7SisQA5dbyA+FH+rsDe/lzsr6K7\nP7tbvBiujmlyMEQgXYRn3ncCJtmPvKdfZ49ZDs5BAoGAVrcPg8HfRPPVWW+gI+g5\nnw0bdQJHSPdNi2J4BTapar4StBInDvjUu/CKf7kBlq3ckLgii/pDT1wBs4rSxQa+\nAf4fZkhv3VBT/UgmjDc8D6vVc+JhfaoWFhUQcl3LrXnHCtLw+hToXMTy+WFI30u3\nBCEP0ki+B4I6eqTwszDwkh4=\n-----END PRIVATE KEY-----\n",
+  "client_email": "handyfoosballserver@handyfoosball.iam.gserviceaccount.com",
+  "client_id": "104485897537905743210",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/handyfoosballserver%40handyfoosball.iam.gserviceaccount.com"
+}
