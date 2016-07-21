@@ -10,12 +10,10 @@ app.get('/', function(req, res) {
 });
 
 app.post('/', function(req, res) {
-    res.send('Something else');
-    return;
     if(req.body.token != SLACK_TOKEN) {
         res.send("Invalid token");
     } else {
-        res.send(req.body);
+        res.send("Valid token");
     }
 });
 
