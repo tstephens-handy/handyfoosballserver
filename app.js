@@ -20,7 +20,7 @@ var db = firebase.database().ref(),
 
 var commands = {
     register: function(userName, email) {
-        return "Registered " + email + " to " + userName;
+        return Promise.resolve("Registered " + email + " to " + userName);
     }
 };
 
@@ -39,7 +39,7 @@ app.post('/', function(req, res) {
         var command = _.split(req.body.text, " ");
         // res.send(JSON.stringify(command));
 
-        res.send(commands['register'](req.body.user_name, command[1]));
+        commands['register'](req.body.user_name, command[1]).then(res.send);
 
 
             // _.spread(commands[_.head(command)])(req.body.user_name, _.tail(command)));
