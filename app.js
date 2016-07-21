@@ -20,7 +20,9 @@ var db = firebase.database().ref(),
 
 var commands = {
     register: function(userName, email) {
-        return Promise.resolve("Registered " + email + " to " + userName);
+        return new Promise(function(resolve, reject) {
+            resolve("Registered " + email + " to " + userName);
+        });
     }
 };
 
