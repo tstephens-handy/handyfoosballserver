@@ -38,7 +38,11 @@ app.post('/', function(req, res) {
         }
         var command = _.split(req.body.text, " ");
         // res.send(JSON.stringify(command));
-        res.send(_.spread(commands[_.head(command)])(req.body.user_name, _.tail(command)));
+
+        res.send(commands['register'](req.body.user_name, command[1]));
+
+
+            // _.spread(commands[_.head(command)])(req.body.user_name, _.tail(command)));
     }
 });
 
