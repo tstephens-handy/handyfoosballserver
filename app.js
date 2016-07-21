@@ -36,7 +36,7 @@ app.post('/', function(req, res) {
             res.send("No command specified");
             return;
         }
-        var command = _.split(req.body.text);
+        var command = _.split(req.body.text, " ");
         res.send(JSON.stringify(command));
         // _.spread(commands[_.head(command)])(req.body.user_name, _.tail(command)).then(res.send);
     }
