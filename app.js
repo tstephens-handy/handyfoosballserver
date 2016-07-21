@@ -5,6 +5,8 @@ var express = require('express'),
     SLACK_TOKEN = 'mDaXXt5QKddzhdQ5pA5cjBdH',
     port = process.env.PORT || 3000;
 
+app.use(require('body-parser').urlencoded({extended:false}));
+
 app.get('/', function(req, res) {
     res.send('Hello foos!');
 });
