@@ -11,7 +11,7 @@ app.get('/', function(req, res) {
 });
 
 app.post('/', function(req, res) {
-    res.send(JSON.stringify(req.body));
+    res.send(req.body.token);
     return;
     if(req.body.token != SLACK_TOKEN) {
         res.status(404).send("Invalid token");
