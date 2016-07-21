@@ -30,14 +30,15 @@ app.get('/', function(req, res) {
 
 app.post('/', function(req, res) {
     if(req.body.token != SLACK_TOKEN) {
-        res.send("Invalid token");
+        res.send("Invalid token: " + req.body.token);
     } else {
         if(_.isEmpty(req.body.text)) {
             res.send("No command specified");
             return;
         }
         var command = _.split(req.body.text);
-        _.spread(commands[_.head(command)])(req.body.user_name, _.tail(command)).then(res.send);
+        res.send(JSON.stringify(command));
+        // _.spread(commands[_.head(command)])(req.body.user_name, _.tail(command)).then(res.send);
     }
 });
 
