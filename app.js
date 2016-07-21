@@ -37,8 +37,8 @@ app.post('/', function(req, res) {
             return;
         }
         var command = _.split(req.body.text, " ");
-        res.send(JSON.stringify(command));
-        // _.spread(commands[_.head(command)])(req.body.user_name, _.tail(command)).then(res.send);
+        // res.send(JSON.stringify(command));
+        _.spread(commands[_.head(command)])(req.body.user_name, _.tail(command)).then(res.send);
     }
 });
 
