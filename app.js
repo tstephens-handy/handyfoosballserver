@@ -208,6 +208,33 @@ var commands = {
             });
         });
     }
+
+    me: function(username, optional_number) {
+        return new Promise(function(resolve) {
+            resolve("you want your ranking? try again later!");
+        });
+    }
+
+    rankings: function(username, optional_number) {
+        return new Promise(function(resolve) {
+            resolve("rankings will be awesome!");
+        });
+    }
+
+    help: function(userName, result) {
+        return new Promise(function(resolve) {
+            var response = "Available Commands are:";
+            response += "\nregister $Handy_Email (registers you as a handy foosballer)";
+            response += "\ngames (displays pending, current, and past games)";
+            response += "\nstart (start pending game)";
+            response += "\ncreate [optional $teamMate vs $opp1 $opp2] (create a new game with the listed players if provided)";
+            response += "\njoin $gamekey $team (1 or 2) (join an existing game)";
+            response += "\nresult $won_or_lost (set the current game result)";
+            response += "\nrankings [optional # or 'all'] (no number given, show top 10, number given, show x, 'all' show all)";
+            response += "\nme (shows ranking, W/L record)";
+            resolve(response);
+        });
+    }
 };
 
 app.get('/', function(req, res) {
