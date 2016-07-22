@@ -145,29 +145,22 @@ var commands = {
                 dbSlackUsers.once('value', function(users) {
                     users = users.val();
 
-                    userNameKey = users[userName] || "";
-
-                    teamMate = _.trim(teamMate, "@");
-                    teammateKey = users[teamMate] || "";
-
-                    opponentPlayer1 = _.trim(opp1, "@");
-                    opponentPlayer1Key = users[opponentPlayer1] || "";
-
-                    opponentPlayer2 = _.trim(opp2, "@");
-                    opponentPlayer2Key = users[opponentPlayer2] || "";
+                    var players = _.map([teamMate, opp1, opp2], function(slackName) {
+                        return _.isString(slackName) ? (users[_.trim(slackName, "@")] || "") : "";
+                    })
 
                     dbGames.push({
                         teams: [
                             {
-                                player1: userNameKey,
-                                player2: teammateKey,
+                                player1: users[userName] || "",
+                                player2: players[0]
                             },
                             {
-                                player1: opponentPlayer1Key, 
-                                player2: opponentPlayer2Key,
+                                player1: players[1],
+                                player2: players[2]
                             }
                         ]
-                    }, resolver(resolve, "Created game, waiting for other players..."));
+                    }, resolver(resolve, "Created game"));
                 });
             });
         });
