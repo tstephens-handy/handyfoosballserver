@@ -140,14 +140,33 @@ var commands = {
             if(gameInfo.game) {
                 return "You are already in a game.";
             }
+
             return new Promise(function(resolve) {
-                dbSlackUsers.child(userName).once('value', function(userKey) {
-                    userKey = userKey.val();
+                dbSlackUsers.once('value', function(users) {
+                    users = users.val();
+
+                    userNameKey = users[userName] || "";
+
+                    teamMate = _.trim(teamMate, "@");
+                    teammateKey = users[teamMate] || "";
+
+                    opponentPlayer1 = _.trim(opp1, "@");
+                    opponentPlayer1Key = users[opponentPlayer1] || "";
+
+                    opponentPlayer2 = _.trim(opp2, "@");
+                    opponentPlayer2Key = users[opponentPlayer2] || "";
+
                     dbGames.push({
-                        teams: [{
-                            player1: userKey,
-                            player2: ""
-                        },{player1: "", player2: ""}]
+                        teams: [
+                            {
+                                player1: userNameKey,
+                                player2: teammateKey,
+                            },
+                            {
+                                player1: opponentPlayer1Key, 
+                                player2: opponentPlayer2Key,
+                            }
+                        ]
                     }, resolver(resolve, "Created game, waiting for other players..."));
                 });
             });
