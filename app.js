@@ -67,7 +67,7 @@ var commands = {
     games: function() { return Promise.all([
             new Promise(function(resolve) {
                 dbGames.once('value', function(games) { games = games.val();
-                    let currentGames = {};
+                    var currentGames = {};
                     currentGames.pending = _.chain(games).values().filter(function(game) { return !game.startTime; }).value();
                     currentGames.past = _.chain(games)
                         .values()
