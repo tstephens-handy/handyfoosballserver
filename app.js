@@ -146,7 +146,7 @@ var commands = {
                     users = users.val();
 
                     var players = _.map([teamMate, opp1, opp2], function(slackName) {
-                        return slackName ? users[_.trim(slackName, "@")] : "";
+                        return _.isString(slackName) ? (users[_.trim(slackName, "@")] || "") : "";
                     })
 
                     dbGames.push({
