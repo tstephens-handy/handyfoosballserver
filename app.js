@@ -195,7 +195,7 @@ var commands = {
                         }
 
                         var teamIndex = _.findKey(teams, function(team) {
-                            return team.player1 == userKey;
+                            return team.player1 == userKey || team.player2 == userKey;
                         });
 
                         dbActiveGame.child('gameId').remove();
