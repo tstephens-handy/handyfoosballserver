@@ -140,15 +140,27 @@ var commands = {
             if(gameInfo.game) {
                 return "You are already in a game.";
             }
+
             return new Promise(function(resolve) {
-                dbSlackUsers.child(userName).once('value', function(userKey) {
-                    userKey = userKey.val();
+                dbSlackUsers.once('value', function(users) {
+                    users = users.val();
+
+                    var players = _.map([teamMate, opp1, opp2], function(slackName) {
+                        return _.isString(slackName) ? (users[_.trim(slackName, "@")] || "") : "";
+                    })
+
                     dbGames.push({
-                        teams: [{
-                            player1: userKey,
-                            player2: ""
-                        },{player1: "", player2: ""}]
-                    }, resolver(resolve, "Created game, waiting for other players..."));
+                        teams: [
+                            {
+                                player1: users[userName] || "",
+                                player2: players[0]
+                            },
+                            {
+                                player1: players[1],
+                                player2: players[2]
+                            }
+                        ]
+                    }, resolver(resolve, "Created game"));
                 });
             });
         });
@@ -164,7 +176,8 @@ var commands = {
                     return;
                 }
 
-                var teamRef = dbGames.child(gameKey).child('teams').child(teamId - 1);
+                var formattedGameKey = "-" + _.trimStart(gameKey, "-");
+                var teamRef = dbGames.child(formattedGameKey).child('teams').child(teamId - 1);
 
                 teamRef.once('value', function(team) {
                     team = team.val();
@@ -175,7 +188,7 @@ var commands = {
                         } else if(_.isEmpty(team.player2)) {
                             teamRef.child('player2').set(userKey, resolver(resolve, "Joined game"));
                         } else {
-                            resolve("No open players in game " + gameKey);
+                            resolve("No open players in game " + formattedGameKey);
                         }
                     });
                 });
