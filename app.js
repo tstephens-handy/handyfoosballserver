@@ -186,12 +186,23 @@ var commands = {
         var won = _.includes(['winner', 'won', 'win'], result);
 
         return new Promise(function(resolve) {
-            dbSlackUsers.child(userName).once('value', function(userKey) {
-                dbActiveGame.child('gameId').once('value', function(gameId) {
-                    dbGames.child(gameId.val()).child('teams').once('value', function(teams) {
-                        if(!isInGame(teams.val(), userKey.val())) {
-
+            dbSlackUsers.child(userName).once('value', function(userKey) { userKey = userKey.val();
+                dbActiveGame.child('gameId').once('value', function(gameId) { gameId = gameId.val();
+                    dbGames.child(gameId).child('teams').once('value', function(teams) { teams = teams.val();
+                        if(!isInGame(teams, userKey)) {
+                            resolve('You are not in the current active game');
+                            return;
                         }
+
+                        var teamIndex = _.findKey(teams, function(team) {
+                            return team.player1 == userKey;
+                        });
+
+                        dbActiveGame.child('gameId').remove();
+                        dbGames.child(gameId).update({
+                            "winner": (won ? teamIndex : Number(!teamIndex)),
+                            "endTime": moment().format()
+                        }, resolver(resolve, "Recorded game result: You " + (won ? "won" : "lost")));
                     });
                 });
             });
