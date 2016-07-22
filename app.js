@@ -1,12 +1,14 @@
 var express = require('express'),
     firebase = require('firebase'),
     Promise = require('bluebird'),
+    bodyParser = require('body-parser'),
     _ = require('lodash'),
     app = express(),
     SLACK_TOKEN = 'mDaXXt5QKddzhdQ5pA5cjBdH',
     port = process.env.PORT || 3000;
 
-app.use(require('body-parser').urlencoded({extended:false}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
 
 firebase.initializeApp({
     serviceAccount: 'cred.json',
@@ -20,9 +22,7 @@ var db = firebase.database().ref(),
 
 var commands = {
     register: function(userName, email) {
-        return new Promise(function(resolve, reject) {
-            resolve("Registered " + email + " to " + userName);
-        });
+        return Promise.resolve("Registered " + email + " to " + userName);
     }
 };
 
@@ -39,12 +39,11 @@ app.post('/', function(req, res) {
             return;
         }
         var command = _.split(req.body.text, " ");
-        // res.send(JSON.stringify(command));
 
-        commands['register'](req.body.user_name, command[1]).then(res.send);
-
-
-            // _.spread(commands[_.head(command)])(req.body.user_name, _.tail(command)));
+        _.spread(commands[_.head(command)])(_.flatten([req.body.user_name, _.tail(command)]))
+        .then(function(response) {
+            res.send(response);
+        });
     }
 });
 
