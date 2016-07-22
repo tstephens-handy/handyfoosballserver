@@ -22,6 +22,12 @@ var db = firebase.database().ref(),
     dbActiveGame = db.child('activeGame'),
     dbSlackUsers = db.child('slackUsers');
 
+function isInGame(teams, userKey) {
+    return _.chain(teams).flatten().map(_.values).flatten().find(function(k) {
+        return k == userKey;
+    }).value();
+}
+
 function userActiveGame(userName) {
     return new Promise(function(resolve) {
         dbSlackUsers.child(userName).once('value', function(userKey) {
@@ -31,9 +37,7 @@ function userActiveGame(userName) {
                     if(game.endTime) {
                         return false;
                     }
-                    return _.chain(game.teams).flatten().map(_.values).flatten().find(function(k) {
-                        return k == userKey;
-                    }).value();
+                    return isInGame(game.teams, userKey);
                 });
 
                 resolve({$id: userGame, game: games[userGame]});
@@ -68,7 +72,7 @@ var commands = {
             new Promise(function(resolve) {
                 dbGames.once('value', function(games) { games = games.val();
                     var currentGames = {};
-                    currentGames.pending = _.chain(games).values().filter(function(game) { return !game.startTime; }).value();
+                    currentGames.pending = _.pickBy(games, function(game) { return !game.startTime; });
                     currentGames.past = _.chain(games)
                         .values()
                         .filter(function(game) { return !!game.endTime; })
@@ -97,7 +101,7 @@ var commands = {
             function gameFormatter(game) {
                 if(game.winner !== undefined) {
                     var loser = Number(!game.winner);
-                    return teamFormatter(game.teams[game.winner]) + " won vs " + teamFormatter(game.teams[loser]);
+                    return teamFormatter(game.teams[game.winner]) + " won vs " + teamFormatter(game.teams[loser]) + " (" + moment(game.startTime).fromNow() + ")";
                 } else {
                     return _.chain(game.teams).map(teamFormatter).join(" vs ").value();
                 }
@@ -108,8 +112,8 @@ var commands = {
                 result += "Active Game: " + gameFormatter(games.activeGame) + " (" + moment(games.activeGame.startTime).fromNow() + ")\n\n";
             }
             result += "Pending Games:\n";
-            _.each(games.pending, function(game) {
-                result += gameFormatter(game) + "\n";
+            _.each(games.pending, function(game, key) {
+                result += gameFormatter(game) + " (" + key + ")\n";
             });
             result += "\nLast " + games.past.length + " Games:\n";
             _.each(games.past, function(game) {
@@ -121,10 +125,9 @@ var commands = {
     },
     start: function(userName) {
         return userActiveGame(userName).then(function(gameInfo) {
-            console.log("User's active game:");
-            console.log(gameInfo);
-            if(_.every(gameInfo.game.teams, (team) => !_.isEmpty(team.player1) && !_.isEmpty(team.player2))) {
+            if(gameInfo.game && _.every(gameInfo.game.teams, (team) => !_.isEmpty(team.player1) && !_.isEmpty(team.player2))) {
                 return new Promise(function(resolve) {
+                    dbActiveGame.child('gameId').set(gameInfo.$id);
                     dbGames.child(gameInfo.$id).child("startTime").set(moment().format(), resolver(resolve, "Started game"));
                 });
             } else {
@@ -132,8 +135,67 @@ var commands = {
             }
         });
     },
-    create: function(userName) {
+    create: function(userName, teamMate, vsString, opp1, opp2) {
+        return userActiveGame(userName).then(function(gameInfo) {
+            if(gameInfo.game) {
+                return "You are already in a game.";
+            }
+            return new Promise(function(resolve) {
+                dbSlackUsers.child(userName).once('value', function(userKey) {
+                    userKey = userKey.val();
+                    dbGames.push({
+                        teams: [{
+                            player1: userKey,
+                            player2: ""
+                        },{player1: "", player2: ""}]
+                    }, resolver(resolve, "Created game, waiting for other players..."));
+                });
+            });
+        });
+    },
+    join: function(userName, gameKey, teamId) {
+        return userActiveGame(userName).then(function(gameInfo) {
+            if(gameInfo.game) {
+                return "You are already in a game.";
+            }
+            return new Promise(function(resolve) {
+                if(!gameKey || !teamId) {
+                    resolve("Must specify a valid game key and team index (1 or 2)");
+                    return;
+                }
 
+                var teamRef = dbGames.child(gameKey).child('teams').child(teamId - 1);
+
+                teamRef.once('value', function(team) {
+                    team = team.val();
+                    dbSlackUsers.child(userName).once('value', function(userKey) {
+                        userKey = userKey.val();
+                        if(_.isEmpty(team.player1)) {
+                            teamRef.child('player1').set(userKey, resolver(resolve, "Joined game"));
+                        } else if(_.isEmpty(team.player2)) {
+                            teamRef.child('player2').set(userKey, resolver(resolve, "Joined game"));
+                        } else {
+                            resolve("No open players in game " + gameKey);
+                        }
+                    });
+                });
+            });
+        });
+    },
+    result: function(userName, result) {
+        var won = _.includes(['winner', 'won', 'win'], result);
+
+        return new Promise(function(resolve) {
+            dbSlackUsers.child(userName).once('value', function(userKey) {
+                dbActiveGame.child('gameId').once('value', function(gameId) {
+                    dbGames.child(gameId.val()).child('teams').once('value', function(teams) {
+                        if(!isInGame(teams.val(), userKey.val())) {
+
+                        }
+                    });
+                });
+            });
+        });
     }
 };
 
