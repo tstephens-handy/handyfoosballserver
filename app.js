@@ -183,7 +183,8 @@ var commands = {
                     return;
                 }
 
-                var teamRef = dbGames.child(gameKey).child('teams').child(teamId - 1);
+                var formattedGameKey = "-" + _.trimStart(gameKey, "-");
+                var teamRef = dbGames.child(formattedGameKey).child('teams').child(teamId - 1);
 
                 teamRef.once('value', function(team) {
                     team = team.val();
@@ -194,7 +195,7 @@ var commands = {
                         } else if(_.isEmpty(team.player2)) {
                             teamRef.child('player2').set(userKey, resolver(resolve, "Joined game"));
                         } else {
-                            resolve("No open players in game " + gameKey);
+                            resolve("No open players in game " + formattedGameKey);
                         }
                     });
                 });
