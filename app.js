@@ -207,19 +207,19 @@ var commands = {
                 });
             });
         });
-    }
+    },
 
     me: function(username, optional_number) {
         return new Promise(function(resolve) {
             resolve("you want your ranking? try again later!");
         });
-    }
+    },
 
     rankings: function(username, optional_number) {
         return new Promise(function(resolve) {
             resolve("rankings will be awesome!");
         });
-    }
+    },
 
     help: function(userName, result) {
         return new Promise(function(resolve) {
