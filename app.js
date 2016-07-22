@@ -198,6 +198,18 @@ var commands = {
         });
     }
 
+    me: function(username, optional_number) {
+        return new Promise(function(resolve) {
+            resolve("you want your ranking? try again later!")
+        });
+    }
+
+    rankings: function(username, optional_number) {
+        return new Promise(function(resolve) {
+            resolve("rankings will be awesome!")
+        });
+    }
+
     help: function(userName, result) {
         return new Promise(function(resolve) {
             var response = "Available Commands are:"
@@ -210,7 +222,7 @@ var commands = {
             response += "\nrankings [optional # or 'all'] (no number given, show top 10, number given, show x, 'all' show all)"
             response += "\nme (shows ranking, W/L record)"
             resolve(response)
-        }
+        });
     }
 };
 
