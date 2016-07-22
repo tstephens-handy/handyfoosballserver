@@ -209,15 +209,53 @@ var commands = {
         });
     },
 
-    me: function(username, optional_number) {
+    me: function(userName) {
         return new Promise(function(resolve) {
-            resolve("you want your ranking? try again later!");
+            dbSlackUsers.child(userName).once('value', function(userKey) { userKey = userKey.val();
+                dbUsers.once('value', function(users) { users = users.val();
+                    var user = users[userKey],
+                        rank = _.chain(users).filter(function(u) { return !!u.ratingInfo; })
+                            .sortedIndexBy(user, function(u) {
+                                return -u.ratingInfo.rating;
+                            }).value();
+
+                    if(rank == undefined) {
+                        resolve("You are unranked. Please check back later!");
+                        return;
+                    }
+                    resolve("#" + (rank + 1) + ": " + user.ratingInfo.rating + " (" + (user.wins || 0) + " / " + (user.losses || 0) + ")");
+                });
+            });
         });
     },
 
-    rankings: function(username, optional_number) {
+    rankings: function(userName, optionalNumber) {
         return new Promise(function(resolve) {
-            resolve("rankings will be awesome!");
+            dbUsers.once('value', function(users) { users = users.val();
+                var rankings = _.partition(users, function(user) {
+                        return user.ratingInfo;
+                    }),
+                    rankedUsers = rankings[0],
+                    unrankedUsers = rankings[1],
+
+                userRankings = _.chain(rankedUsers).sortBy(function(user) {
+                    return -user.ratingInfo.rating;
+                });
+
+                if(optionalNumber != 'all') {
+                    userRankings = userRankings.take(optionalNumber || 10);
+                }
+
+                userRankings = userRankings.map(function(user, index) {
+                    return "#" + (index + 1) + ": " + user.ratingInfo.rating + "\t" + user.displayName;
+                }).join('\n').value();
+
+                if (optionalNumber == 'all') {
+                    userRankings += "\n\nUnranked Users:\n" + _.chain(unrankedUsers).map('displayName').join(", ").value();
+                }
+
+                resolve(userRankings);
+            });
         });
     },
 
