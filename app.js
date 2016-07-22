@@ -251,6 +251,11 @@ app.post('/', function(req, res) {
         }
         var command = _.split(req.body.text, " ");
 
+        if(!commands[_.head(command)]) {
+            res.send("Invalid command: " + _.head(command));
+            return;
+        }
+
         _.spread(commands[_.head(command)])(_.flatten([req.body.user_name, _.tail(command)]))
         .then(function(response) {
             res.send(response);
